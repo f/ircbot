@@ -1,5 +1,16 @@
 <?php
 
+/*
+BU DOSYA ESKİDİR, ircbot.php'ye gözatın!!!!
+
+
+
+
+
+
+
+*/
+
     //Eğer CLI dışında bir ortamdan girildiyse hata verilir.
     if (php_sapi_name() != 'cli')
     {
