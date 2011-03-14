@@ -9,29 +9,34 @@ class Channel {
 
 	private $users = array();
 
-	public function setName($name) {
+	public function setName($name)
+	{
 		$this->name = $name;
 	}
 
-	public function getName() {
+	public function getName()
+	{
 		return $this->name;
 	}
 
-	public function setTitle($title) {
+	public function setTitle($title)
+	{
 		$this->title = $title;
 	}
 
-	public function getTitle() {
+	public function getTitle()
+	{
 		return $this->title;
 	}
 
-	public function setUsers($users) {
-
+	public function setUsers($users)
+	{
 		$users = explode(' ', $users);
 		$this->users = $users;
 	}
 
-	public function getUsers() {
+	public function getUsers()
+	{
 		return $this->users;
 	}
 }

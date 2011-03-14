@@ -31,7 +31,10 @@ class Client {
 	 */
 	private $commander = null;
 
-	private $bot = false;
+	/**
+	 * @var \IRC\Bot
+	 */
+	private $bot;
 
 	private static $_instance;
 
@@ -66,6 +69,11 @@ class Client {
 		$this->channel->setName($channel);
 	}
 
+	public function getChannel()
+	{
+		return $this->channel;
+	}
+
 	/**
 	 * @param  $nickname string|array
 	 * @return void
@@ -89,7 +97,7 @@ class Client {
 		$this->send($this->commander->nick($this->nickname));
 		$this->send($this->commander->user($this->nickname));
 		$this->send($this->commander->join($this->channel->getName()));
-
+		$this->send($this->commander->pong());
 
 	}
 
@@ -122,7 +130,7 @@ class Client {
 				));
 				return $response;
 
-			} elseif (preg_match('{^:(?<nickname>[^!]+)![^@]*@[A-Za-z\/]*(?<ip>[0-9\.]*)? (?<command>[A-Z]+) (?<channel>#?[^:]+)?:(?<message>.*)$}uis', $data, $message)) {
+			} elseif (preg_match('{^:(?<nickname>[^!]+)![^@]*@(?<address>[0-9A-Za-z\/\.\:]*)? (?<command>[A-Z]+) (?<channel>#?[^:\s]+)?[^:]*:(?<message>.*)$}uis', $data, $message)) {
 
 				$message = array_map('trim', $message);
 
@@ -136,7 +144,7 @@ class Client {
 
 				$response = new Message(Message::TYPE_MSG);
 				$response->setMessage(array(
-					'ip' => trim($message['ip'],'.'),
+					'address' => $message['address'],
 					'nickname' => $message['nickname'],
 					'channel' => ($message['channel'] != '' ? $message['channel'] : $this->channel->getName()),
 					'message' => $message['message'],
@@ -162,17 +170,20 @@ class Client {
 	 * @param bool|string $to
 	 * @return void
 	 */
-	public function talk($message, $to = false)
+	public function talk($message, $delay = 1, $to = false)
 	{
+		sleep($delay);
+
 		if (!$to)
 			$to = $this->channel->getName();
 
 		$this->send($this->commander->talk($message, $to));
 	}
 
-	public function attach(Bot $bot)
+	public function attach($bot)
 	{
-		$this->bot = $bot;
+		$this->bot = Bot::factory($bot);
+		$this->bot->setIRC($this);
 	}
 
 	public function listen()
@@ -180,6 +191,7 @@ class Client {
 		while(false !== ($message = $this->receive()))
 		{
 			$msg = $message->getMessage();
+
 			switch ($message->getType())
 			{
 				case Message::TYPE_IRC:
@@ -192,11 +204,26 @@ class Client {
 							$this->channel->setUsers($msg['message']);
 							break;
 					}
-					var_dump($msg);
-					$this->bot->getTalk();
+
+					if (preg_match('{NAMES}u', $msg['message']))
+					{
+						$this->bot->logged = true;
+						$this->bot->onLogin();
+					}
+
+					if ($this->bot->logged)
+						$this->bot->onIRCNotice($message);
+
 					break;
 				case Message::TYPE_MSG:
-					var_dump($msg);
+
+					if ($this->bot->logged)
+					{
+						$this->bot->onAnyMessage($message);
+						if ($msg['private'])
+							$this->bot->onPrivateMessage($message);
+					}
+
 					break;
 				case Message::TYPE_PING:
 					$this->send($this->commander->pong());

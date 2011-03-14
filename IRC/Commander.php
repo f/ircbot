@@ -7,7 +7,7 @@ class Commander {
 	const USER = 'USER %s 0 * : %1$s';
 	const JOIN = 'JOIN %s';
 	const TALK = 'PRIVMSG %s : %s';
-	const PONG = 'PONG';
+	const PONG = 'PONG 127.0.0.1';
 
 	public function nick($nickname) {
 		return sprintf(self::NICK, $nickname);
