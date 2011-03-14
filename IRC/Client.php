@@ -205,23 +205,48 @@ class Client {
 							break;
 					}
 
-					if (preg_match('{NAMES}u', $msg['message']))
+					if ($this->bot)
 					{
-						$this->bot->logged = true;
-						$this->bot->onLogin();
-					}
+						if (!$this->bot->logged && preg_match('{NAMES}u', $msg['message'])) {
+							$this->bot->logged = true;
+							$this->bot->onLogin();
+						}
 
-					if ($this->bot->logged)
-						$this->bot->onIRCNotice($message);
+						if ($this->bot->logged)
+							$this->bot->onIRCNotice($message);
+					}
 
 					break;
 				case Message::TYPE_MSG:
 
-					if ($this->bot->logged)
+					if ($this->bot && $msg['command'] == 'PRIVMSG')
 					{
-						$this->bot->onAnyMessage($message);
-						if ($msg['private'])
-							$this->bot->onPrivateMessage($message);
+						if ($this->bot->logged) {
+							$this->bot->onAnyMessage($message);
+							if ($msg['private'])
+								$this->bot->onPrivateMessage($message);
+						}
+					}
+
+					if (in_array($msg['command'], array('JOIN', 'QUIT', 'KICK')))
+					{
+						$this->send($this->commander->names($this->channel->getName()));
+
+						if ($this->bot && $this->bot->logged)
+						{
+							switch ($msg['command'])
+							{
+								case 'JOIN':
+									$this->bot->onSomeoneLogin($message);
+									break;
+								case 'QUIT':
+									$this->bot->onSomeoneExit($message);
+									break;
+								case 'KICK':
+									$this->bot->onSomeoneKicked($message);
+									break;
+							}
+						}
 					}
 
 					break;

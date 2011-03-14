@@ -45,6 +45,7 @@ abstract class Bot {
 	abstract function onLogin();
 	abstract function onSomeoneLogin(Message $message);
 	abstract function onSomeoneExit(Message $message);
+	abstract function onSomeoneKicked(Message $message);
 	abstract function onAnyMessage(Message $message);
 	abstract function onPrivateMessage(Message $message);
 	abstract function onPublicMessage(Message $message);

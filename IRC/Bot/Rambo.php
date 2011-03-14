@@ -62,7 +62,12 @@ class Rambo extends Bot {
 
 	public function onSomeoneLogin(Message $message)
 	{
+		$this->bot()->talk('Hoşgeldin');
+	}
 
+	public function onSomeoneKicked(Message $message)
+	{
+		$this->bot()->talk('Bye');
 	}
 
 }
