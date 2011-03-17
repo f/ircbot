@@ -5,7 +5,7 @@
 You just have to run like the example below:
 
 <code>
-ircbot.php --host=&lt;host&gt; --port=&lt;port&gt; --channel=#&lt;channel name&gt; --attach=&lt;bot name&gt;
+php ircbot.php --host=&lt;host&gt; --port=&lt;port&gt; --channel=#&lt;channel name&gt; --attach=&lt;bot name&gt;
 </code>
 
 Then your bot logins and runs.
