@@ -21,5 +21,4 @@ $irc->channel($options['channel']);
 $irc->attach($options['attach']);
 
 $irc->connect();
-
 $irc->listen();
