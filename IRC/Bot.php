@@ -7,6 +7,7 @@ abstract class Bot {
 	private $owner = 'fka';
 
 	public $logged = false;
+	public $quitRequest = false;
 
 	/**
 	 * @var $irc Client
@@ -57,6 +58,26 @@ abstract class Bot {
 	protected function bot()
 	{
 		return $this->irc;
+	}
+
+	protected function talk($message, $delay = 1, $to = false)
+	{
+		$this->bot()->talk($message, $delay, $to);
+	}
+
+	protected function replyPrivate($message, $delay = 1)
+	{
+		$this->bot()->talk($message, $delay, $this->message->get('nickname'));
+	}
+
+	protected function replyPublic($message, $delay = 1)
+	{
+		$this->bot()->talk($this->message->get('nickname').": ".$message, $delay);
+	}
+
+	protected function info($key)
+	{
+		return $this->getMessage()->get($key);
 	}
 
 	public function getTalk()

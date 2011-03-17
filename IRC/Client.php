@@ -277,10 +277,19 @@ class Client {
 					$this->send($this->commander->pong());
 					break;
 				case Message::TYPE_NULL:
-					echo "[{$message->getTime()->format('Y-m-d H:i:s')}] <@IRC>\t[**]\t: {$msg['message']}";
+					echo "[{$message->getTime()->format('Y-m-d H:i:s')}] <@IRC>\t[**]\t: {$msg['message']} \n";
 					break;
 			}
+
+			if ($this->bot)
+			{
+				if ($this->bot->quitRequest == true) {
+					$this->send($this->commander->quit());
+					break;
+				}
+			}
 		}
+		exit("Loop broken. Sorry :( \n");
 	}
 
 }

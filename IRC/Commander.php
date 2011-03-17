@@ -8,6 +8,7 @@ class Commander {
 	const JOIN = 'JOIN %s';
 	const TALK = 'PRIVMSG %s :%s';
 	const PONG = 'PONG 127.0.0.1';
+	const QUIT = 'QUIT';
 
 	const NAMES = 'NAMES %s';
 
@@ -39,5 +40,10 @@ class Commander {
 	public function pong()
 	{
 		return self::PONG;
+	}
+
+	public function quit()
+	{
+		return self::QUIT;
 	}
 }

@@ -8,6 +8,9 @@ use IRC\Message,
 class Rambo extends Bot {
 
 	private $personal;
+	private $settings = array(
+		'suspend' => false
+	);
 
 	public function setup()
 	{
@@ -20,8 +23,22 @@ class Rambo extends Bot {
 		);
 	}
 
+	/**
+	 * @param  $key
+	 * @param  $value
+	 * @return void
+	 *
+	 * Settings.
+	 *
+	 */
+	private function set($key, $value)
+	{
+		$this->settings[$key] = $value;
+	}
+
 	public function onLogin()
 	{
+		$this->talk('Yönetilmeye hazırım patron.', 0, $this->getOwner());
 		//$this->bot()->talk('test');
 		//$this->bot()->talk('naber', 2);
 
@@ -45,13 +62,35 @@ class Rambo extends Bot {
 
 	public function onPublicMessage()
 	{
-		if ($this->getMessage()->get('mention') == 2)
-			$this->bot()->talk('efendim patron?', 3);
+		if ($this->info('mention') == 2)
+			$this->talk('efendim patron?', 3);
 	}
 
 	public function onOwnerPrivateMessage()
 	{
-		$this->bot()->talk('ADMINISTRATION', 0, $this->getMessage()->get('nickname'));
+		switch (true)
+		{
+			case preg_match('/^stop/ui', $this->info('message')):
+
+				$this->set('suspend', true);
+				$this->replyPrivate('Suspended.', 0);
+
+				break;
+			case preg_match('/^start/ui', $this->info('message')):
+
+				$this->set('suspend', false);
+				$this->replyPrivate('Activated again.', 0);
+
+				break;
+			case preg_match('/^quit/ui', $this->info('message')):
+
+				$this->replyPrivate('Quit request queued.', 0);
+				$this->talk('Beyler ben kaçıyorum...', 2);
+				sleep(2);
+				$this->quitRequest = true;
+
+				break;
+		}
 	}
 
 	public function onOwnerPublicMessage()
@@ -66,7 +105,11 @@ class Rambo extends Bot {
 
 	public function onSomeoneLogin()
 	{
-		//$this->bot()->talk('Hoşgeldin');
+		if ($this->info('nickname') == $this->getOwner())
+		{
+			$this->replyPrivate('Yönetilmeye hazırım patron.', 0);
+			$this->replyPublic('Selam naber bebek :).', 2);
+		}
 	}
 
 	public function onSomeoneKicked()
