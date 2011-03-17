@@ -177,6 +177,9 @@ class Client {
 		if (!$to)
 			$to = $this->channel->getName();
 
+		$time = date('Y-m-d H:i:s');
+		echo "[{$time}] <{$this->nickname}>\t[>>]\t: {$message} \n";
+
 		$this->send($this->commander->talk($message, $to));
 	}
 
@@ -190,11 +193,17 @@ class Client {
 	{
 		while(false !== ($message = $this->receive()))
 		{
+			if ($this->bot)
+				$this->bot->setMessage($message);
+
 			$msg = $message->getMessage();
 
 			switch ($message->getType())
 			{
 				case Message::TYPE_IRC:
+
+					echo "[{$message->getTime()->format('Y-m-d H:i:s')}] <@IRC>\t[**]\t: {$msg['message']} \n";
+
 					switch ($msg['code'])
 					{
 						case 332:
@@ -213,18 +222,32 @@ class Client {
 						}
 
 						if ($this->bot->logged)
-							$this->bot->onIRCNotice($message);
+							$this->bot->onIRCNotice();
 					}
 
 					break;
 				case Message::TYPE_MSG:
 
+					if ($msg['command'] == 'PRIVMSG')
+						echo "[{$message->getTime()->format('Y-m-d H:i:s')}] <{$msg['nickname']}>\t[<<]\t: {$msg['message']} \n";
+
 					if ($this->bot && $msg['command'] == 'PRIVMSG')
 					{
 						if ($this->bot->logged) {
-							$this->bot->onAnyMessage($message);
-							if ($msg['private'])
-								$this->bot->onPrivateMessage($message);
+							$this->bot->onAnyMessage();
+							if ($msg['nickname'] == $this->bot->getOwner())
+							{
+								if ($msg['private'])
+									$this->bot->onOwnerPrivateMessage();
+								else
+									$this->bot->onOwnerPublicMessage();
+							} else {
+								if ($msg['private'])
+									$this->bot->onPrivateMessage();
+								else
+									$this->bot->onPublicMessage();
+							}
+
 						}
 					}
 
@@ -237,13 +260,13 @@ class Client {
 							switch ($msg['command'])
 							{
 								case 'JOIN':
-									$this->bot->onSomeoneLogin($message);
+									$this->bot->onSomeoneLogin();
 									break;
 								case 'QUIT':
-									$this->bot->onSomeoneExit($message);
+									$this->bot->onSomeoneExit();
 									break;
 								case 'KICK':
-									$this->bot->onSomeoneKicked($message);
+									$this->bot->onSomeoneKicked();
 									break;
 							}
 						}
@@ -254,7 +277,7 @@ class Client {
 					$this->send($this->commander->pong());
 					break;
 				case Message::TYPE_NULL:
-					echo $msg['message'];
+					echo "[{$message->getTime()->format('Y-m-d H:i:s')}] <@IRC>\t[**]\t: {$msg['message']}";
 					break;
 			}
 		}

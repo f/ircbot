@@ -15,7 +15,6 @@ $irc = IRC\Client::getInstance();
 
 $irc->server($options['host'], $options['port']);
 $irc->channel($options['channel']);
-$irc->nickname('ramboberk');
 $irc->attach('Rambo');
 
 $irc->connect();

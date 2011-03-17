@@ -12,24 +12,36 @@ class Message {
 	private $time;
 	private $message = array();
 
-	public function __construct($type) {
+	public function __construct($type)
+	{
 		$this->time = time();
 		$this->type = $type;
 	}
 
-	public function setMessage(array $message) {
+	public function setMessage(array $message)
+	{
 		$this->message = $message;
 	}
 
-	public function getMessage() {
+	public function getMessage()
+	{
 		return $this->message;
 	}
 
-	public function getTime() {
-		return $this->time;
+	public function get($key)
+	{
+		return $this->message[$key];
 	}
 
-	public function getType() {
+	public function getTime()
+	{
+		$time = new \DateTime();
+		$time->setTimestamp($this->time);
+		return $time;
+	}
+
+	public function getType()
+	{
 		return $this->type;
 	}
 

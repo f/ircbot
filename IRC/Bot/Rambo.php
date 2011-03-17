@@ -11,8 +11,8 @@ class Rambo extends Bot {
 
 	public function setup()
 	{
-		$this->owner = 'fka';
-		$this->nickname = 'ramboberk';
+		$this->setOwner('fka');
+		$this->setNickname('ramboberk');
 		$this->personal = array(
 			'age' => 23,
 			'sex' => 'm',
@@ -22,52 +22,56 @@ class Rambo extends Bot {
 
 	public function onLogin()
 	{
-		$this->bot()->talk('test');
-		$this->bot()->talk('naber', 2);
+		//$this->bot()->talk('test');
+		//$this->bot()->talk('naber', 2);
 
-		$users = implode(',', $this->bot()->getChannel()->getUsers());
+		//$users = implode(',', $this->bot()->getChannel()->getUsers());
 
-		$this->bot()->talk('Selam ' . $users, 3);
+		//$this->bot()->talk('Selam ' . $users, 3);
 	}
 
-	public function onIRCNotice(Message $message)
-	{
-		var_dump($message->getMessage());
-	}
+	public function onIRCNotice()
+	{}
 
-	public function onAnyMessage(Message $message)
+	public function onAnyMessage()
 	{
 
 	}
 
-	public function onPrivateMessage(Message $message)
+	public function onPrivateMessage()
 	{
 
 	}
 
-	public function onOwnerMessage(Message $message)
+	public function onPublicMessage()
+	{
+		if ($this->getMessage()->get('mention') == 2)
+			$this->bot()->talk('efendim patron?', 3);
+	}
+
+	public function onOwnerPrivateMessage()
+	{
+		$this->bot()->talk('ADMINISTRATION', 0, $this->getMessage()->get('nickname'));
+	}
+
+	public function onOwnerPublicMessage()
 	{
 
 	}
 
-	public function onPublicMessage(Message $message)
+	public function onSomeoneExit()
 	{
 
 	}
 
-	public function onSomeoneExit(Message $message)
+	public function onSomeoneLogin()
 	{
-
+		//$this->bot()->talk('Hoşgeldin');
 	}
 
-	public function onSomeoneLogin(Message $message)
+	public function onSomeoneKicked()
 	{
-		$this->bot()->talk('Hoşgeldin');
-	}
-
-	public function onSomeoneKicked(Message $message)
-	{
-		$this->bot()->talk('Bye');
+		//$this->bot()->talk('Bye');
 	}
 
 }

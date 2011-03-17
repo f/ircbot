@@ -3,8 +3,8 @@ namespace IRC;
 
 abstract class Bot {
 
-	protected $nickname = 'fkaBot';
-	protected $owner = 'fka';
+	private $nickname = 'fkaBot';
+	private $owner = 'fka';
 
 	public $logged = false;
 
@@ -13,15 +13,48 @@ abstract class Bot {
 	 */
 	private $irc;
 
+	/**
+	 * @var $message Message
+	 */
+	private $message;
+
 	public function setIRC(Client $client)
 	{
 		$this->irc = $client;
+		$this->setup();
+	}
+
+	public function setMessage(Message $message) {
+		$this->message = $message;
+	}
+
+	public function getMessage() {
+		return $this->message;
+	}
+
+	public function getOwner()
+	{
+		return $this->owner;
+	}
+
+	protected function setOwner($owner)
+	{
+		$this->owner = $owner;
+	}
+
+	public function getNickname() {
+		return $this->nickname;
+	}
+
+	protected function setNickname($nickname) {
+		$this->nickname = $nickname;
+		$this->irc->nickname($nickname);
 	}
 
 	/**
 	 * @return Client
 	 */
-	public function bot()
+	protected function bot()
 	{
 		return $this->irc;
 	}
@@ -29,6 +62,10 @@ abstract class Bot {
 	public function getTalk()
 	{
 		return include __DIR__ . '/../' . implode(DIRECTORY_SEPARATOR, explode('\\',get_class($this))).'Talk.php';
+	}
+
+	private function compileSentence($sentence)
+	{
 	}
 
 	/**
@@ -42,14 +79,16 @@ abstract class Bot {
 		return new $bot;
 	}
 
+	abstract function setup();
 	abstract function onLogin();
-	abstract function onSomeoneLogin(Message $message);
-	abstract function onSomeoneExit(Message $message);
-	abstract function onSomeoneKicked(Message $message);
-	abstract function onAnyMessage(Message $message);
-	abstract function onPrivateMessage(Message $message);
-	abstract function onPublicMessage(Message $message);
-	abstract function onOwnerMessage(Message $message);
-	abstract function onIRCNotice(Message $message);
+	abstract function onSomeoneLogin();
+	abstract function onSomeoneExit();
+	abstract function onSomeoneKicked();
+	abstract function onAnyMessage();
+	abstract function onPublicMessage();
+	abstract function onPrivateMessage();
+	abstract function onOwnerPublicMessage();
+	abstract function onOwnerPrivateMessage();
+	abstract function onIRCNotice();
 
 }

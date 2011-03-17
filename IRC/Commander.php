@@ -6,7 +6,7 @@ class Commander {
 	const NICK = 'NICK %s';
 	const USER = 'USER %s 0 * : %1$s';
 	const JOIN = 'JOIN %s';
-	const TALK = 'PRIVMSG %s : %s';
+	const TALK = 'PRIVMSG %s :%s';
 	const PONG = 'PONG 127.0.0.1';
 
 	const NAMES = 'NAMES %s';

@@ -3,7 +3,7 @@ return array(
 	'private' => array(
 		'direct' => array(
 			'efendim?',
-			'kanala gel #%channel%, özelden konuşmuyorum',
+			'kanala gel #<%channel%>, özelden konuşmuyorum',
 			'evet?',
 			'??',
 			'evt?',
