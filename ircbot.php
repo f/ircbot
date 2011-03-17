@@ -13,8 +13,8 @@ IRC\Autoloader::register();
 
 $irc = IRC\Client::getInstance();
 
-if (!file_exists(__DIR__.'/IRC/Bot/'. $options['channel'] . '.php'))
-	exit("\n Bot not found! \n");
+if (!file_exists(__DIR__.'/IRC/Bot/'. $options['attach'] . '.php'))
+	exit("\nBot {$options['attach']} doesn't exists! \n");
 
 $irc->server($options['host'], $options['port']);
 $irc->channel($options['channel']);
