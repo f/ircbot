@@ -14,14 +14,14 @@ This is help output:
 
 IRCBot Framework Copyleft (c) 2010 Fatih Kadir AKIN
 This program comes with ABSOLUTELY NO WARRANTY.
-For more information, please refer to <http://unlicense.org/>
+For more information, please refer to &lt;http://unlicense.org/&gt;
 
 Usage: ircbot.php [options]
 
-	-s or --server <server>		Server to connect
-	-p or --port <port>		Port to connect
-	-c or --channel <channel>	IRC Channel name to connect, must be started with "#"
-	-a or --attach <bot>		A bot name to attach, stored in IRC/Bot folder.
+	-s or --server &lt;server&gt;		Server to connect
+	-p or --port &lt;port&gt;		Port to connect
+	-c or --channel &lt;channel&gt;	IRC Channel name to connect, must be started with "#"
+	-a or --attach &lt;bot&gt;		A bot name to attach, stored in IRC/Bot folder.
 	-h or --help			Show this information.
 
 </code>
