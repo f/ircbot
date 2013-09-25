@@ -1,5 +1,8 @@
 # IRCBot: PHP IRC Bot Framework
 
+[![Clone ircbot in Koding](http://kbutton.org/clone.png?v1380117432582)](http://kbutton.org/f/ircbot)
+
+
 ## How it works?
 
 You just have to run like the example below:
